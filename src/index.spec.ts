@@ -1,7 +1,18 @@
 // tslint:disable:no-expression-statement
-import test from 'ava';
-import { parse, stringify } from './index';
+import { pack, parse, stringify, unpack } from './index';
 
-test('parsing and stringifying a number remains the same', t => {
-  t.is(4, parse(stringify(4)));
-});
+const SIMPLE_OBJECTS: ReadonlyArray<any> = [
+  4,
+  'string',
+  ['array'],
+  { foo: 'bar' },
+  { outer: { inner: 'value' } },
+  [{ array: { of: 'objects' } }]
+];
+
+SIMPLE_OBJECTS.forEach(i =>
+  test(`packing and unpacking retains the original value: ${JSON.stringify(i)}`, () => {
+    expect(unpack(pack(i))).toEqual(i);
+    expect(parse(stringify(i))).toEqual(i);
+  })
+);
