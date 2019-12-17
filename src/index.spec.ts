@@ -7,7 +7,10 @@ const SIMPLE_OBJECTS: ReadonlyArray<any> = [
   ['array'],
   { foo: 'bar' },
   { outer: { inner: 'value' } },
-  [{ array: { of: 'objects' } }]
+  [{ array: { of: 'objects' } }],
+  null,
+  { foo: null },
+  undefined,
 ];
 
 SIMPLE_OBJECTS.forEach(i =>
