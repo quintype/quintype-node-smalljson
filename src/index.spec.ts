@@ -11,7 +11,7 @@ const SIMPLE_OBJECT: ReadonlyArray<any> = [
   null,
   { foo: null },
   undefined
-];
+].map(i => Object.freeze(i));
 
 SIMPLE_OBJECT.forEach(i => {
   test(`packing and unpacking retains the original value without options: ${JSON.stringify(
@@ -47,9 +47,13 @@ test('removes common sections from the same story 10 times', () => {
     })
   };
 
+  const originalJson = JSON.stringify(r);
   const stringified = stringify(r, { extractKeys: new Set(['sections']) });
-  expect(stringified.length).toBeLessThan(JSON.stringify(r).length / 3);
+  expect(stringified.length).toBeLessThan(originalJson.length / 3);
   expect(parse(stringified)).toEqual(r);
+
+  // Just confirming r was not mutated
+  expect(JSON.stringify(r)).toEqual(originalJson);
 });
 
 test('it can also handle nested items', () => {
@@ -71,7 +75,17 @@ test('it can also handle nested items', () => {
     })
   };
 
-  const stringified = stringify(r, { extractKeys: new Set(['sections', 'collection']) });
-  expect(stringified.length).toBeLessThan(JSON.stringify(r).length / 3);
+  const originalJson = JSON.stringify(r);
+  const stringified = stringify(r, { extractKeys: new Set(['sections']) });
+  expect(stringified.length).toBeLessThan(originalJson.length / 3);
   expect(parse(stringified)).toEqual(r);
+
+  // Just confirming r was not mutated
+  expect(JSON.stringify(r)).toEqual(originalJson);
+});
+
+test('it is able to pack and unpack simple objects when key matches', () => {
+  expect(unpack(pack({ foo: 'bar' }, { extractKeys: new Set(['foo']) }))).toEqual({ foo: 'bar' });
+  expect(unpack(pack({ foo: 4 }, { extractKeys: new Set(['foo']) }))).toEqual({ foo: 4 });
+  expect(unpack(pack({ foo: null }, { extractKeys: new Set(['foo']) }))).toEqual({ foo: null });
 });
