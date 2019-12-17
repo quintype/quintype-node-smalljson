@@ -2,16 +2,19 @@ interface SmallJson {
   type: 'smalljson';
   id: '0';
   data: any;
-  included: readonly IncludedItem[];
+  included: readonly SmallJsonIncludedItem[];
   meta: {
-    packingOptions: SmallJsonOptions;
+    randomString: string;
   };
 }
 
-interface SmallJsonOptions {}
+interface SmallJsonOptions {
+  extractKeys?: Set<string>;
+  randomString?: string;
+}
 
-interface IncludedItem {
-  type: 'included';
+interface SmallJsonIncludedItem {
+  type: string;
   id: string;
   data: any;
 }
