@@ -45,6 +45,7 @@ export function pack(value: any, packingOptions: SmallJsonOptions = {}): SmallJs
   const included: { readonly [key: string]: SmallJsonIncludedItem } = {};
 
   const randomString = packingOptions.randomString || 'qTyp3';
+
   const shrunkVersion = _pack(value, included, {
     ...packingOptions,
     randomString
@@ -79,16 +80,16 @@ function _pack(
     // This handles objects, but skips null (typeof null === 'object')
     // Using a for loop because this is a hot path
     const ret = {};
-    for (const [key, v] of Object.entries(value)) {
+    for (const key in value) {
       if (packingOptions.deleteKeys && packingOptions.deleteKeys.has(key)) {
         continue;
       }
 
-      if (packingOptions.deleteNulls && v === null) {
+      if (packingOptions.deleteNulls && value[key] === null) {
         continue;
       }
 
-      const packedValue = _pack(v, included, packingOptions);
+      const packedValue = _pack(value[key], included, packingOptions);
       // tslint:disable-next-line: prefer-conditional-expression
       if (
         packingOptions.extractKeys &&
