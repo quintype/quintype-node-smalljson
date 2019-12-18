@@ -10,11 +10,21 @@ ex:
 
 ```javascript
 const { stringify, parse } = require("@quintype/smalljson");
+const hash = require("object-hash");
 
 const response = stringify(collectionResponse, {
-  extractKeys: new Set(['sections', 'story', 'authors']),
+  extractKeys: new Set(['sections', 'authors']),
   deleteKeys: new Set(["created-at", "modified-at"]),
   deleteNulls: true,
+  hashingFunction(key, value) {
+    if (key === "sections" && value && typeof value === "object" && value.id) {
+      return `sec-${value.id}`;
+    } else if (key === "authors" && value && typeof value === "object" && value.id) {
+      return `aut-${value.id}-${value["contributor-role"]}`
+    } else {
+      return hash(value, { encoding: 'base64' }).substring(0, 5);
+    }
+  }
 })
 
 const getResponseBack = parse(response);
