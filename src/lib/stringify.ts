@@ -81,6 +81,10 @@ function _pack(
     // Using a for loop because this is a hot path
     const ret = {};
     for (const key in value) {
+      if (!value.hasOwnProperty(key)) {
+        continue;
+      }
+
       if (packingOptions.deleteKeys && packingOptions.deleteKeys.has(key)) {
         continue;
       }

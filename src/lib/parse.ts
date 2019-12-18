@@ -34,11 +34,13 @@ function _unpack(value: any, randomString: string, included: { readonly [key: st
     return _unpack(included[value.id], randomString, included);
   } else if (value && typeof value === 'object') {
     const ret = {};
-    for (const [key, v] of Object.entries(
-      value.type === randomString ? included[value.id] : value
-    )) {
+    const valueToUnpack = value.type === randomString ? included[value.id] : value;
+    for (const key in valueToUnpack) {
+      if (!value.hasOwnProperty(key)) {
+        continue;
+      }
       // tslint:disable-next-line: no-object-mutation no-expression-statement
-      ret[key] = _unpack(v, randomString, included);
+      ret[key] = _unpack(valueToUnpack[key], randomString, included);
     }
     return ret;
   } else {
