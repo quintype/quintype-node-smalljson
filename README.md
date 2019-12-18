@@ -9,9 +9,13 @@ This project is used to shrink some json responses. The goal of the library is a
 ex:
 
 ```javascript
-const response = SmallJson.stringify(collectionResponse, {
-  includeKeys: ['sections', 'story', 'authors']
+const { stringify, parse } = require("@quintype/smalljson");
+
+const response = stringify(collectionResponse, {
+  extractKeys: new Set(['sections', 'story', 'authors']),
+  deleteKeys: new Set(["created-at", "modified-at"]),
+  deleteNulls: true,
 })
 
-const getResponseBack = SmallJson.parse(response);
+const getResponseBack = parse(response);
 ```

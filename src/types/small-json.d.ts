@@ -8,11 +8,6 @@ interface SmallJson {
   };
 }
 
-interface SmallJsonOptions {
-  extractKeys?: Set<string>;
-  randomString?: string;
-}
-
 interface SmallJsonIncludedItem {
   type: string;
   id: string;
